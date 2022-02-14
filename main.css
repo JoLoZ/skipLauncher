@@ -1,0 +1,103 @@
+@font-face {
+  font-family: Roboto;
+  src: url(fonts/Roboto-Thin.ttf);
+  font-weight: 100;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(fonts/Roboto-Light.ttf);
+  font-weight: 300;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(fonts/Roboto-Regular.ttf);
+  font-weight: 400;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(fonts/Roboto-Medium.ttf);
+  font-weight: 500;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(fonts/Roboto-Bold.ttf);
+  font-weight: 700;
+}
+@font-face {
+  font-family: Roboto;
+  src: url(fonts/Roboto-Black.ttf);
+  font-weight: 900;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: black;
+}
+
+.background {
+  position: fixed;
+  z-index: -1000;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  background-image: url(background.png);
+  background-size: cover;
+  background-position: center;
+  filter: blur(0.2rem);
+}
+
+.wrapper {
+  color: white;
+  min-height: 100vh;
+  min-width: 100vw;
+  font-family: Roboto;
+  font-weight: 100;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.progress-bar {
+  background-color: rgba(255, 255, 255, 0.295);
+  height: 1rem;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  border-radius: 0.5rem;
+}
+.progress-bar .inner {
+  background-color: rgba(255, 255, 255, 0.664);
+  border-radius: 0.5rem;
+  height: 100%;
+  transition: 200ms;
+}
+
+.topbar {
+  position: fixed;
+  backdrop-filter: blur(0.5rem);
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: end;
+  font-size: 2rem;
+  height: 2rem;
+  padding-right: 0.5rem;
+  -webkit-app-region: drag;
+  cursor: grabbing;
+}
+
+.topbar .item {
+  -webkit-app-region: none;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.topbar .item:hover {
+  opacity: 1;
+}

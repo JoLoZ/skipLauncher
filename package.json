@@ -1,0 +1,31 @@
+{
+  "name": "skip-launcher",
+  "version": "1.0.0",
+  "description": "A new generation launcher for Minecraft",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/joloz/skip-launcher.git"
+  },
+  "author": "JoLoZs",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://gitlab.com/joloz/skip-launcher/issues"
+  },
+  "homepage": "https://gitlab.com/joloz/skip-launcher#readme",
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "minecraft-launcher-core": "^3.16.11",
+    "msmc": "^3.0.6"
+  },
+  "devDependencies": {
+    "electron": "^17.0.0",
+    "electron-builder": "^22.14.13"
+  }
+}

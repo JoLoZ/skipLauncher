@@ -1,0 +1,33 @@
+<link href="main.css" rel="stylesheet" />
+<div class="background"></div>
+<div class="wrapper">
+  <div class="flex-center" id="login-auto">
+    <div>Logging in...</div>
+  </div>
+  <div class="flex-center" id="login-auto">
+    <center>
+      <h1>skipLauncher</h1>
+      <button onclick='ipcRenderer.send("launch")'>Launch MC</button> 
+    </center>
+  </div>
+</div>
+
+<script src="topbar.js"></script>
+
+<script>
+  ipcRenderer.send("login_ms", {
+    visual: "none",
+    full: false
+  });
+
+  ipcRenderer.on("login_return", (event, auth) => {
+    console.log("[AUTH]", auth);
+    if (auth == undefined) {
+      ipcRenderer.send("login_ms", {
+        visual: "select_account"
+      });
+    } else {
+      $("#login-auto").fadeOut();
+    }
+  });
+</script>
