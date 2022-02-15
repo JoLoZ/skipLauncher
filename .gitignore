@@ -1,4 +1,6 @@
-node_modules
+node_modules/*
+!node_modules/msmc/
+!node_modules/msmc/*
 minecraft
 dist
 latest.log
