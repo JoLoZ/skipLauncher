@@ -4,11 +4,7 @@ const fs = require("fs");
 fs.renameSync("latest.log", "old.log");
 fs.unlink("old.log", console.log);
 var logger = require('logger').createLogger('latest.log');
-logger.format = function(level, date, message) {
-  var output = date.toLocaleTimeString() + " [" + level + "] " + message
-  console.log(output);
-  return output;
-};
+logger.format = require("./loggerFunc").format;
 
 const path = require("path");
 
