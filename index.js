@@ -1,5 +1,26 @@
 const { app, BrowserWindow, ipcMain, screen, protocol } = require("electron");
+const fs = require("fs");
+
+fs.renameSync("latest.log", "old.log");
+fs.unlink("old.log", console.log);
+var logger = require('logger').createLogger('latest.log');
+logger.format = function(level, date, message) {
+  var output = date.toLocaleTimeString() + " [" + level + "] " + message
+  console.log(output);
+  return output;
+};
+
 const path = require("path");
+
+logger.setLevel('debug');
+
+logger.info(`Boot up
+
+---------------------
+|   Skip Launcher   |
+|      - Log -      |
+---------------------
+`)
 
 var mainWindow = null;
 
@@ -38,26 +59,7 @@ app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", () => {
-  console.log("All windows closed. Assuming game launch.");
-});
-
-ipcMain.on("login_ms", (event, arg) => {
-  require("./launch").login.ms(
-    mainWindow,
-    {
-      launch: false,
-      visual: "none",
-      full: true,
-      ...arg,
-    },
-    (auth) => {
-      console.log("Returning login info", auth);
-      event.sender.send("login_return", auth);
-    },
-    (auth) => {
-      event.sender.send("login_return", auth);
-    }
-  );
+  logger.debug("All windows closed. Assuming game launch.");
 });
 
 ipcMain.on("quit", (event, arg) => {
@@ -66,11 +68,10 @@ ipcMain.on("quit", (event, arg) => {
 
 
 ipcMain.on("login_new", (event, arg) => {
-  console.log(event);
   require("./launch").login(mainWindow, arg);
 })
 
 ipcMain.on("launch", (event, arg) => {
+  logger.info("--- LAUNCHING VERSION 1.8.9 ---")
   require("./launch").launch("1.8.9", arg, mainWindow);
-
 });

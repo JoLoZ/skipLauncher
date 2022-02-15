@@ -1,4 +1,12 @@
 const { dialog, app, ipcMain } = require("electron");
+var logger = require("logger").createLogger("latest.log");
+logger.format = function(level, date, message) {
+  var output = date.toLocaleTimeString() + " [" + level + "] " + message
+  console.log(output);
+  return output;
+};
+
+logger.setLevel("debug");
 
 var win = null;
 
@@ -37,19 +45,19 @@ exports.launch = function (mc_version, auth, mainWindow) {
   launcher.on("debug", sendLogToWindow);
 
   function sendLogToWindow(e) {
-    console.log(e);
+    logger.info(e);
     try {
       mainWindow.webContents.send("launch_msg", e);
     } catch {}
     if (e.includes("Stopping!")) {
-      console.log("Stop detected! Shutting down...");
+      logger.debug("Stop detected! Shutting down...");
       app.quit();
     }
   }
 };
 
 exports.login = (win, options) => {
-  console.log("Login requested", options);
+  logger.debug("Login requested", options);
   const msmc = require("msmc");
 
   win.setAlwaysOnTop(true, "main-menu");
@@ -58,7 +66,7 @@ exports.login = (win, options) => {
     .fastLaunch(
       "electron",
       (update) => {
-        console.log("[AUTH]", update);
+        logger.info("[AUTH]", update.data);
         win.webContents.send("login_update", update);
       },
       options.visible
@@ -67,7 +75,7 @@ exports.login = (win, options) => {
       win.setAlwaysOnTop(false);
       //Let's check if we logged in?
       if (msmc.errorCheck(result)) {
-        console.error("[AUTH] ERR", result.reason);
+        logger.error("[AUTH] ERR", result.reason);
         return;
       }
 
