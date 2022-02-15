@@ -37,7 +37,7 @@
   }
 
   ipcRenderer.on("launch_msg", (event, arg) => {
-    $("#status").text(arg);
+    $("#status").text(arg.replaceAll("[MCLC]: ", ""));
     console.log(arg);
   })
 </script>
