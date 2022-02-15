@@ -1,4 +1,4 @@
 @echo off
 title skipLauncher
 cd ..
-npm start
+npm start --silent
