@@ -116,6 +116,12 @@ exports.syncFiles = function (source, dest, progressCB, exitWindow) {
   }
 
 
+  if(!fs.existsSync(source) && !fs.existsSync(dest)){
+    progressCB("No local Minecraft installation found.\nSkipping...")
+    return;
+  }
+
+
   function copyFileSync(source, target) {
     var targetFile = target;
 
