@@ -64,12 +64,13 @@ ipcMain.on("quit", (event, arg) => {
   app.quit();
 });
 
+
+ipcMain.on("login_new", (event, arg) => {
+  console.log(event);
+  require("./launch").login(mainWindow, arg);
+})
+
 ipcMain.on("launch", (event, arg) => {
-  var launch = require("./launch");
-  launch.login.ms(mainWindow, {
-    visual: "none",
-    launch: true,
-    version: "1.8.9",
-    full: true
-  })
+  require("./launch").launch("1.8.9", arg, mainWindow);
+
 });

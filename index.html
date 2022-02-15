@@ -1,33 +1,43 @@
 <link href="main.css" rel="stylesheet" />
 <div class="background"></div>
 <div class="wrapper">
-  <div class="flex-center" id="login-auto">
-    <div>Logging in...</div>
-  </div>
-  <div class="flex-center" id="login-auto">
+  <div class="flex-center">
     <center>
       <h1>skipLauncher</h1>
-      <button onclick='ipcRenderer.send("launch")'>Launch MC</button> 
+      <button id="launch-btn" disabled style="min-width: 20rem" class="loading" onclick="launch()">
+        Logging in...
+      </button>
     </center>
   </div>
+
+  <pre class="bottom-text" id="status"></pre>
 </div>
 
 <script src="topbar.js"></script>
 
 <script>
-  ipcRenderer.send("login_ms", {
-    visual: "none",
-    full: false
+  ipcRenderer.send("login_new", {
+    visible: "select_account",
   });
 
-  ipcRenderer.on("login_return", (event, auth) => {
-    console.log("[AUTH]", auth);
-    if (auth == undefined) {
-      ipcRenderer.send("login_ms", {
-        visual: "select_account"
-      });
-    } else {
-      $("#login-auto").fadeOut();
-    }
+  ipcRenderer.on("login_update", (event, arg) => {
+    $("#status").text(arg.data + "...");
   });
+
+  var auth = null;
+  ipcRenderer.on("login_result", (event, arg) => {
+    auth = arg;
+    $("#launch-btn").removeClass("loading").prop("disabled", false).text("Play!");
+    $("#status").text("");
+  });
+
+  function launch() {
+    ipcRenderer.send("launch", auth);
+    $("#status").addClass("loading").prop("disabled", true).text("Launching...");
+  }
+
+  ipcRenderer.on("launch_msg", (event, arg) => {
+    $("#status").text(arg);
+    console.log(arg);
+  })
 </script>

@@ -1,4 +1,4 @@
-const { dialog, app } = require("electron");
+const { dialog, app, ipcMain } = require("electron");
 
 var win = null;
 
@@ -27,90 +27,50 @@ exports.launch = function (mc_version, auth, mainWindow) {
 
   console.log("Starting!");
 
-  mainWindow.webContents.send("launch_msg", {
-    data: "Launching...",
-    percent: 100,
-  });
   launcher.launch(opts).then(() => {
     setTimeout(() => {
       mainWindow.close();
     }, 500);
   });
 
-  launcher.on("debug", (e) => console.log(e));
-  launcher.on("data", (e) => {
+  launcher.on("data", sendLogToWindow);
+  launcher.on("debug", sendLogToWindow);
+
+  function sendLogToWindow(e) {
     console.log(e);
+    try {
+      mainWindow.webContents.send("launch_msg", e);
+    } catch {}
     if (e.includes("Stopping!")) {
       console.log("Stop detected! Shutting down...");
       app.quit();
     }
-  });
+  }
 };
 
-exports.login = {};
-
-exports.login.ms = function (
-  mainWindow,
-  options,
-  callback,
-  errCallback = console.error
-) {
-  win = mainWindow;
-
-  console.log("Login Options", options);
-
+exports.login = (win, options) => {
+  console.log("Login requested", options);
   const msmc = require("msmc");
 
-  if (options.launch) {
-    mainWindow.loadFile("launch.html");
-  }
-  mainWindow.setAlwaysOnTop(true, "main-menu");
-
-  var sentCallback = false;
+  win.setAlwaysOnTop(true, "main-menu");
 
   msmc
     .fastLaunch(
       "electron",
       (update) => {
-        mainWindow.setAlwaysOnTop(false);
-        //A hook for catching loading bar events and errors, standard with MSMC
-        console.log("CallBack!!!!!");
-        console.log(update);
-        if (!sentCallback && !options.full) {
-          console.log("Sending login callback");
-          callback(true);
-          sentCallback = true;
-        } else if (!options.full) {
-          console.log("Ignoring");
-        } else {
-          mainWindow.webContents.send("launch_msg", update);
-        }
+        console.log("[AUTH]", update);
+        win.webContents.send("login_update", update);
       },
-      options.visual
+      options.visible
     )
     .then((result) => {
-      mainWindow.setAlwaysOnTop(false);
+      win.setAlwaysOnTop(false);
       //Let's check if we logged in?
       if (msmc.errorCheck(result)) {
-        handleError(result.reason, errCallback);
+        console.error("[AUTH] ERR", result.reason);
         return;
       }
-      if (options.launch) {
-        exports.launch(
-          options.version,
-          msmc.getMCLC().getAuth(result),
-          mainWindow
-        );
-      } else {
-        callback(msmc.getMCLC().getAuth(result));
-      }
-    })
-    .catch((reason) => {
-      handleError(reason, errCallback);
+
+      win.webContents.send("login_result", msmc.getMCLC().getAuth(result));
     });
 };
-
-function handleError(reason, callback) {
-  win.setAlwaysOnTop(false);
-  callback(reason);
-}
