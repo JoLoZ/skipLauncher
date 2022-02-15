@@ -78,6 +78,12 @@ exports.login = (win, options) => {
   logger.debug("Login requested", options);
   const msmc = require("msmc");
 
+  if(options.errorHandler == undefined){
+    options.errorHandler = function(reason){
+      logger.error("[AUTH] ERR", reason);
+    }
+  }
+
   msmc
     .fastLaunch(
       "electron",
@@ -90,12 +96,12 @@ exports.login = (win, options) => {
     .then((result) => {
       //Let's check if we logged in?
       if (msmc.errorCheck(result)) {
-        logger.error("[AUTH] ERR", result.reason);
-        return;
+        options.errorHandler(result.reason);
+        return
       }
 
       win.webContents.send("login_result", msmc.getMCLC().getAuth(result));
-    });
+    }).catch(options.errorHandler);
 };
 
 exports.syncFiles = function (source, dest, progressCB, exitWindow) {

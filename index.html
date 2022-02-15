@@ -4,11 +4,7 @@
   <div class="flex-center">
     <center>
       <h1>skipLauncher</h1>
-      <button
-        id="launch-btn"
-        style="min-width: 10rem"
-        onclick="btnaction()"
-      >
+      <button id="launch-btn" style="min-width: 10rem" onclick="btnaction()">
         Login with Microsoft
       </button>
     </center>
@@ -22,10 +18,10 @@
 <script>
   var auth = null;
 
-  function btnaction(){
-    if(auth == null){
+  function btnaction() {
+    if (auth == null) {
       login();
-    }else{
+    } else {
       launch();
     }
   }
