@@ -146,4 +146,5 @@ button.loading{
   white-space: pre;
   display: flex;
   justify-content: center;
+  text-align: center;
 }

@@ -4,8 +4,12 @@
   <div class="flex-center">
     <center>
       <h1>skipLauncher</h1>
-      <button id="launch-btn" disabled style="min-width: 20rem" class="loading" onclick="launch()">
-        Logging in...
+      <button
+        id="launch-btn"
+        style="min-width: 10rem"
+        onclick="btnaction()"
+      >
+        Login with Microsoft
       </button>
     </center>
   </div>
@@ -16,28 +20,52 @@
 <script src="topbar.js"></script>
 
 <script>
-  ipcRenderer.send("login_new", {
-    visible: "select_account",
-  });
+  var auth = null;
+
+  function btnaction(){
+    if(auth == null){
+      login();
+    }else{
+      launch();
+    }
+  }
+
+  function login() {
+    ipcRenderer.send("login_new", {
+      visible: "select_account",
+    });
+  }
 
   ipcRenderer.on("login_update", (event, arg) => {
     $("#status").text(arg.data + "...");
+    $("#launch-btn")
+      .addClass("loading")
+      .prop("disabled", true)
+      .text("Loading...");
   });
 
-  var auth = null;
   ipcRenderer.on("login_result", (event, arg) => {
     auth = arg;
-    $("#launch-btn").removeClass("loading").prop("disabled", false).text("Play!");
+    $("#launch-btn")
+      .removeClass("loading")
+      .prop("disabled", false)
+      .text("Play!");
     $("#status").text("");
   });
 
   function launch() {
-    ipcRenderer.send("launch", auth);
-    $("#launch-btn").addClass("loading").prop("disabled", true).text("Launching...");
+    ipcRenderer.send("launch", {
+      auth: auth,
+      version: "1.8.9",
+    });
+    $("#launch-btn")
+      .addClass("loading")
+      .prop("disabled", true)
+      .text("Launching...");
   }
 
   ipcRenderer.on("launch_msg", (event, arg) => {
     $("#status").text(arg.replaceAll("[MCLC]: ", ""));
     console.log(arg);
-  })
+  });
 </script>
