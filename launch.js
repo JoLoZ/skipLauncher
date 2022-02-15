@@ -31,10 +31,18 @@ exports.launch = function (mc_version, auth, mainWindow) {
 
   console.log("Starting!");
 
-  launcher.launch(opts).then(() => {
+  launcher.launch(opts).then((instance) => {
     setTimeout(() => {
       mainWindow.close();
     }, 500);
+
+    instance.on("close", (err) => {
+      dialog.showMessageBox({
+        message: "There was an error launching Minecraft. Please check the log for further info.",
+        title: "Launch Error",
+        type: "error"
+      }).then(app.quit);
+    });
   });
 
   launcher.on("data", sendLogToWindow);
@@ -56,8 +64,6 @@ exports.login = (win, options) => {
   logger.debug("Login requested", options);
   const msmc = require("msmc");
 
-  win.setAlwaysOnTop(true, "main-menu");
-
   msmc
     .fastLaunch(
       "electron",
@@ -68,7 +74,6 @@ exports.login = (win, options) => {
       options.visible
     )
     .then((result) => {
-      win.setAlwaysOnTop(false);
       //Let's check if we logged in?
       if (msmc.errorCheck(result)) {
         logger.error("[AUTH] ERR", result.reason);
