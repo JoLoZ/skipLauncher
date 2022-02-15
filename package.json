@@ -1,8 +1,17 @@
 {
   "name": "skip-launcher",
+  "productName": "skipLauncher",
+  "copyright": "©2022 JoLoZs and Modders",
   "version": "1.0.0",
   "description": "A new generation launcher for Minecraft",
   "main": "index.js",
+  "build": {
+    "files": [
+      "!minecraft/*",
+      "!dist/*",
+      "!latest.log"
+    ]
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",

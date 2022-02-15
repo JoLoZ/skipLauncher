@@ -43,12 +43,18 @@ const createWindow = () => {
       contextIsolation: false,
     },
     frame: false,
-    movable: false,
-    resizable: false,
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile("index.html");
+  mainWindow.loadFile("index.html").then(() => {
+    require("./launch").login(mainWindow, {
+      visible: "none",
+      window: {
+        transparent: true,
+        frame: false
+      }
+    });
+  });
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

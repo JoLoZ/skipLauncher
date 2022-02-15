@@ -13,6 +13,10 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback) {
   const { Client, Authenticator } = require("minecraft-launcher-core");
   const fs = require("fs");
 
+  if(!fs.existsSync("./minecraft")){
+    fs.mkdirSync("./minecraft");
+  }
+
   exports.syncFiles(process.env.APPDATA + "/.minecraft", "./minecraft", (msg) => {
     mainWindow.webContents.send("launch_msg", msg);
   });
@@ -74,7 +78,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback) {
   }
 };
 
-exports.login = (win, options) => {
+exports.login = async (win, options) => {
   logger.debug("Login requested", options);
   const msmc = require("msmc");
 
@@ -91,7 +95,8 @@ exports.login = (win, options) => {
         logger.info("[AUTH]", update.data);
         win.webContents.send("login_update", update);
       },
-      options.visible
+      options.visible,
+      options.window
     )
     .then((result) => {
       //Let's check if we logged in?
