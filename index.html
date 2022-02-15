@@ -33,7 +33,7 @@
 
   function launch() {
     ipcRenderer.send("launch", auth);
-    $("#status").addClass("loading").prop("disabled", true).text("Launching...");
+    $("#launch-btn").addClass("loading").prop("disabled", true).text("Launching...");
   }
 
   ipcRenderer.on("launch_msg", (event, arg) => {
