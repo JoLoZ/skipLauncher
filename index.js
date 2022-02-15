@@ -1,14 +1,16 @@
 const { app, BrowserWindow, ipcMain, screen, protocol } = require("electron");
 const fs = require("fs");
 
-fs.renameSync("latest.log", "old.log");
+try {
+  fs.renameSync("latest.log", "old.log");
+} catch {}
 fs.unlink("old.log", console.log);
-var logger = require('logger').createLogger('latest.log');
+var logger = require("logger").createLogger("latest.log");
 logger.format = require("./loggerFunc").format;
 
 const path = require("path");
 
-logger.setLevel('debug');
+logger.setLevel("debug");
 
 logger.info(`Boot up
 
@@ -16,7 +18,7 @@ logger.info(`Boot up
 |   Skip Launcher   |
 |      - Log -      |
 ---------------------
-`)
+`);
 
 var mainWindow = null;
 
@@ -62,12 +64,11 @@ ipcMain.on("quit", (event, arg) => {
   app.quit();
 });
 
-
 ipcMain.on("login_new", (event, arg) => {
   require("./launch").login(mainWindow, arg);
-})
+});
 
 ipcMain.on("launch", (event, arg) => {
-  logger.info("--- LAUNCHING VERSION 1.8.9 ---")
+  logger.info("--- LAUNCHING VERSION 1.8.9 ---");
   require("./launch").launch("1.8.9", arg, mainWindow);
 });
