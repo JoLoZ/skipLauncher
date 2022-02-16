@@ -1,6 +1,9 @@
 # skipLauncher
 The skipable launcher!
 
+## Important information
+This launcher is far from finished and I'll be continuing to update it. Consider checking this repo every now and then for updates. Your data will be kept across updates and reinstalls.
+
 ## Installation
 Simply download the repo and run `npm i`, that'll take care of everything. The actual Minecraft installation will happen on first launch.
 
