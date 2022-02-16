@@ -5,6 +5,13 @@
     <center>
       <div style="height: 5rem"></div>
       <h1>skipLauncher</h1>
+      <div id="launch-info">
+        <span
+          >Ready to play Minecraft
+          <a id="launch-version" href="javascript:select_version();">1.8.9</a
+          >?</span
+        >
+      </div>
       <button id="launch-btn" style="min-width: 10rem" onclick="btnaction()">
         Login with Microsoft
       </button>
@@ -14,7 +21,7 @@
       >
         <div style="width: 20rem">
           <pre id="status"></pre>
-          <div class="progress-bar">
+          <div class="progress-bar" style="display: none">
             <div class="inner" id="progress"></div>
           </div>
         </div>
@@ -62,10 +69,13 @@
     $("#status").text("");
     $("#progress").width("0%").parent().clearQueue().slideUp();
 
+    $("#launch-info").slideDown();
+
     autoLaunchHandler();
   });
 
   function launch(version) {
+    $("#launch-version").text(version);
     ipcRenderer.send("launch", {
       auth: auth,
       version: version,
@@ -115,5 +125,9 @@
     } else {
       console.warn("No auto launch action fitting");
     }
+  }
+
+  function select_version() {
+    alert("Work in progress. Use the protocol in the meantime.");
   }
 </script>
