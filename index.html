@@ -3,10 +3,19 @@
 <div class="wrapper">
   <div class="flex-center">
     <center>
+      <div style="height: 5rem"></div>
       <h1>skipLauncher</h1>
       <button id="launch-btn" style="min-width: 10rem" onclick="btnaction()">
         Login with Microsoft
       </button>
+      <div id="progress-container" style="min-height: 5rem; display: flex; align-items: flex-end;">
+        <div style="width: 20rem">
+          <pre id="status"></pre>
+          <div class="progress-bar">
+            <div class="inner" id="progress"></div>
+          </div>
+        </div>
+      </div>
     </center>
   </div>
 
@@ -17,7 +26,6 @@
 
 <script>
   var auth = null;
-
   function btnaction() {
     if (auth == null) {
       login();
@@ -28,16 +36,21 @@
 
   function login() {
     ipcRenderer.send("login_new", {
-      visible: "select_account"
+      visible: "select_account",
     });
   }
 
   ipcRenderer.on("login_update", (event, arg) => {
-    $("#status").text(arg.data + "...");
+    $("#progress")
+      .width(arg.percent + "%")
+      .parent()
+      .clearQueue()
+      .slideDown();
+    $("#status").text(arg.data);
     $("#launch-btn")
       .addClass("loading")
       .prop("disabled", true)
-      .text("Loading...");
+      .text("Loading");
   });
 
   ipcRenderer.on("login_result", (event, arg) => {
@@ -47,6 +60,7 @@
       .prop("disabled", false)
       .text("Play!");
     $("#status").text("");
+    $("#progress").width("0%").parent().clearQueue().slideUp();
   });
 
   function launch() {
@@ -57,11 +71,24 @@
     $("#launch-btn")
       .addClass("loading")
       .prop("disabled", true)
-      .text("Launching...");
+      .text("Launching");
   }
 
   ipcRenderer.on("launch_msg", (event, arg) => {
     $("#status").text(arg.replaceAll("[MCLC]: ", ""));
     console.log(arg);
+
+    if(arg.toLowerCase().includes("downloaded") || arg.toLowerCase().includes("collected")){
+      $("#progress").parent().clearQueue().slideUp();
+    }
+  });
+
+  ipcRenderer.on("launch_progress", (event, arg) => {
+    $("#status").text("Downloading " + arg.type);
+    $("#progress")
+      .width((100 * arg.task) / arg.total + "%")
+      .parent()
+      .clearQueue()
+      .slideDown();
   });
 </script>

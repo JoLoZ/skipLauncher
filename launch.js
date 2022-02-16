@@ -6,18 +6,20 @@ logger.setLevel("debug");
 
 var win = null;
 
-exports.launch = function (mc_version, auth, mainWindow, exitCallback) {
+exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
   win = mainWindow;
 
   const path = require("path");
   const { Client, Authenticator } = require("minecraft-launcher-core");
   const fs = require("fs");
 
-  if(!fs.existsSync("./minecraft")){
-    fs.mkdirSync("./minecraft");
+  logger.info("Attempting to launch in", loc);
+
+  if(!fs.existsSync(loc)){
+    fs.mkdirSync(loc);
   }
 
-  exports.syncFiles(process.env.APPDATA + "/.minecraft", "./minecraft", (msg) => {
+  exports.syncFiles(process.env.APPDATA + "/.minecraft", loc, (msg) => {
     mainWindow.webContents.send("launch_msg", msg);
   });
 
@@ -32,7 +34,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback) {
       directory: "..",
       gameDirectory: "..",
     },
-    root: "minecraft",
+    root: loc,
     version: {
       number: mc_version,
       type: "release",
@@ -45,6 +47,11 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback) {
   };
 
   console.log("Starting!");
+
+  launcher.on("progress", (progress) => {
+    logger.debug("Progress", progress);
+    mainWindow.webContents.send("launch_progress", progress);
+  })
 
   launcher.launch(opts).then((instance) => {
     setTimeout(() => {

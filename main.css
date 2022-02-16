@@ -69,6 +69,7 @@ body {
   display: flex;
   align-items: flex-start;
   border-radius: 0.5rem;
+  overflow: hidden;
 }
 .progress-bar .inner {
   background-color: rgba(255, 255, 255, 0.664);
@@ -147,4 +148,5 @@ button.loading{
   display: flex;
   justify-content: center;
   text-align: center;
+  max-width: 100%;
 }

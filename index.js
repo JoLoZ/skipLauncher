@@ -105,7 +105,7 @@ function handleExit(code) {
     logger.debug("Starting file back sync...");
 
     require("./launch").syncFiles(
-      "./minecraft",
+      path.join(app.getPath('userData'), "minecraft"),
       process.env.APPDATA + "/.minecraft",
       "exit",
       exitWindow
@@ -120,5 +120,5 @@ function handleExit(code) {
 
 ipcMain.on("launch", (event, arg) => {
   logger.info("--- LAUNCHING VERSION " + arg.version + " ---");
-  require("./launch").launch(arg.version, arg.auth, mainWindow, handleExit);
+  require("./launch").launch(arg.version, arg.auth, mainWindow, handleExit, path.join(app.getPath('userData'), "minecraft"));
 });
