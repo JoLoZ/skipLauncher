@@ -11,19 +11,10 @@ crashReporter.start({
   uploadToServer: false,
 });
 
-try {
-  fs.renameSync("latest.log", "old.log");
-} catch {}
-fs.unlink("old.log", console.log);
-var logger = require("logger").createLogger("latest.log");
-logger.format = require("./loggerFunc").format;
-
 const path = require("path");
 const { exit } = require("process");
 
-logger.setLevel("debug");
-
-logger.info(`Boot up
+console.info(`Boot up
 
 ---------------------
 |   Skip Launcher   |
@@ -64,6 +55,9 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+
+  app.setAsDefaultProtocolClient("skipLauncher");
+
   createWindow();
 
   app.on("activate", () => {
@@ -74,7 +68,7 @@ app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", () => {
-  logger.debug("All windows closed. Assuming game launch.");
+  console.log("All windows closed. Assuming game launch.");
 });
 
 ipcMain.on("quit", (event, arg) => {
@@ -86,7 +80,7 @@ ipcMain.on("login_new", (event, arg) => {
 });
 
 function handleExit(code) {
-  logger.info("Minecraft exited with code", code);
+  console.info("Minecraft exited with code", code);
   var exitWindow = new BrowserWindow({
     width: screen.getPrimaryDisplay().workAreaSize.height / 3,
     height: (screen.getPrimaryDisplay().workAreaSize.height / 3) * 1.5,
@@ -102,7 +96,7 @@ function handleExit(code) {
   exitWindow.loadFile("exit.html").then(syncBack);
 
   async function syncBack() {
-    logger.debug("Starting file back sync...");
+    console.log("Starting file back sync...");
 
     require("./launch").syncFiles(
       path.join(app.getPath('userData'), "minecraft"),
@@ -119,6 +113,6 @@ function handleExit(code) {
 }
 
 ipcMain.on("launch", (event, arg) => {
-  logger.info("--- LAUNCHING VERSION " + arg.version + " ---");
+  console.info("--- LAUNCHING VERSION " + arg.version + " ---");
   require("./launch").launch(arg.version, arg.auth, mainWindow, handleExit, path.join(app.getPath('userData'), "minecraft"));
 });

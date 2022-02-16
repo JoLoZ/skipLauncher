@@ -1,8 +1,4 @@
 const { dialog, app, ipcMain } = require("electron");
-var logger = require("logger").createLogger("latest.log");
-logger.format = require("./loggerFunc").format;
-
-logger.setLevel("debug");
 
 var win = null;
 
@@ -13,7 +9,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
   const { Client, Authenticator } = require("minecraft-launcher-core");
   const fs = require("fs");
 
-  logger.info("Attempting to launch in", loc);
+  console.info("Attempting to launch in", loc);
 
   if(!fs.existsSync(loc)){
     fs.mkdirSync(loc);
@@ -49,7 +45,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
   console.log("Starting!");
 
   launcher.on("progress", (progress) => {
-    logger.debug("Progress", progress);
+    console.log("Progress", progress);
     mainWindow.webContents.send("launch_progress", progress);
   })
 
@@ -78,7 +74,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
   launcher.on("debug", sendLogToWindow);
 
   function sendLogToWindow(e) {
-    logger.info(e);
+    console.info(e);
     try {
       mainWindow.webContents.send("launch_msg", e);
     } catch {}
@@ -86,12 +82,12 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
 };
 
 exports.login = async (win, options) => {
-  logger.debug("Login requested", options);
+  console.log("Login requested", options);
   const msmc = require("msmc");
 
   if(options.errorHandler == undefined){
     options.errorHandler = function(reason){
-      logger.error("[AUTH] ERR", reason);
+      console.error("[AUTH] ERR", reason);
     }
   }
 
@@ -99,7 +95,7 @@ exports.login = async (win, options) => {
     .fastLaunch(
       "electron",
       (update) => {
-        logger.info("[AUTH]", update.data);
+        console.info("[AUTH]", update.data);
         win.webContents.send("login_update", update);
       },
       options.visible,
@@ -122,7 +118,7 @@ exports.syncFiles = function (source, dest, progressCB, exitWindow) {
 
   if(progressCB == "exit"){
     progressCB = (msg) => {
-      logger.info("[EXIT] File sync progress: \n", msg)
+      console.info("[EXIT] File sync progress: \n", msg)
       exitWindow.webContents.send("exit_msg", msg);
     }
   }
