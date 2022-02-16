@@ -2,7 +2,13 @@
 The skipable launcher!
 
 ## Installation
-Simply download or clone this repo, open it in a terminal and run `npm i`. NPM will take care of the installation process for you. To now run the launcher, run `npm start`. Compile using `npm run pack` and create an installer using `npm run dist` if you want to.
+Simply download the repo and run `npm i`, that'll take care of everything. The actual Minecraft installation will happen on first launch.
 
-## Important information
-Currently, the launcher launches Minecraft version 1.8.9. This version will be automatically downloaded during the first launch. Currently constant internet is required throughout the launcher.
+## Compiling
+If you want to compile a version for yourself, use `npm run pack` and check the result in the `dist` folder. To also generate a redistributeable installer, run `npm run dist`.
+
+## Launching Minecraft
+Currently the launcher launches Minecraft 1.8.9 (Vanilla) through the GUI. However, the launcher supports all release versions of Minecraft through the url scheme. Simply create a shortcut to the url `skipLauncher://launch/<your-version>` and it'll open up the launcher, download and launch the specified version. **This requires the launcher to be compiled.**
+
+## License
+The launcher is available under the Apache 2.0 license. See the `LICENSE` file for more.
