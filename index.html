@@ -8,7 +8,10 @@
       <button id="launch-btn" style="min-width: 10rem" onclick="btnaction()">
         Login with Microsoft
       </button>
-      <div id="progress-container" style="min-height: 5rem; display: flex; align-items: flex-end;">
+      <div
+        id="progress-container"
+        style="min-height: 5rem; display: flex; align-items: flex-end"
+      >
         <div style="width: 20rem">
           <pre id="status"></pre>
           <div class="progress-bar">
@@ -30,7 +33,7 @@
     if (auth == null) {
       login();
     } else {
-      launch();
+      launch("1.8.9");
     }
   }
 
@@ -47,10 +50,7 @@
       .clearQueue()
       .slideDown();
     $("#status").text(arg.data);
-    $("#launch-btn")
-      .addClass("loading")
-      .prop("disabled", true)
-      .text("Loading");
+    $("#launch-btn").addClass("loading").prop("disabled", true).text("Loading");
   });
 
   ipcRenderer.on("login_result", (event, arg) => {
@@ -61,12 +61,14 @@
       .text("Play!");
     $("#status").text("");
     $("#progress").width("0%").parent().clearQueue().slideUp();
+
+    autoLaunchHandler();
   });
 
-  function launch() {
+  function launch(version) {
     ipcRenderer.send("launch", {
       auth: auth,
-      version: "1.8.9",
+      version: version,
     });
     $("#launch-btn")
       .addClass("loading")
@@ -78,7 +80,10 @@
     $("#status").text(arg.replaceAll("[MCLC]: ", ""));
     console.log(arg);
 
-    if(arg.toLowerCase().includes("downloaded") || arg.toLowerCase().includes("collected")){
+    if (
+      arg.toLowerCase().includes("downloaded") ||
+      arg.toLowerCase().includes("collected")
+    ) {
       $("#progress").parent().clearQueue().slideUp();
     }
   });
@@ -91,4 +96,24 @@
       .clearQueue()
       .slideDown();
   });
+
+  function autoLaunchHandler() {
+    console.log("auto launch handling in progress");
+    var args = ipcRenderer.sendSync("get_args");
+    console.log("Args:", args);
+
+    if (args[1] == undefined) {
+      console.info("Skipping auto launch");
+      return;
+    } else {
+      args[1] = args[1].toLowerCase();
+    }
+
+    if (args[1].includes("skiplauncher://launch/")) {
+      console.info("Proceeding to auto launch");
+      launch(args[1].replace("skiplauncher://launch/", ""));
+    } else {
+      console.warn("No auto launch action fitting");
+    }
+  }
 </script>

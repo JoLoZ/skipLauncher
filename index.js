@@ -12,7 +12,6 @@ crashReporter.start({
 });
 
 const path = require("path");
-const { exit } = require("process");
 
 console.info(`Boot up
 
@@ -42,8 +41,8 @@ const createWindow = () => {
       visible: "none",
       window: {
         transparent: true,
-        frame: false
-      }
+        frame: false,
+      },
     });
   });
 
@@ -55,7 +54,6 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-
   app.setAsDefaultProtocolClient("skipLauncher");
 
   createWindow();
@@ -99,7 +97,7 @@ function handleExit(code) {
     console.log("Starting file back sync...");
 
     require("./launch").syncFiles(
-      path.join(app.getPath('userData'), "minecraft"),
+      path.join(app.getPath("userData"), "minecraft"),
       process.env.APPDATA + "/.minecraft",
       "exit",
       exitWindow
@@ -114,5 +112,16 @@ function handleExit(code) {
 
 ipcMain.on("launch", (event, arg) => {
   console.info("--- LAUNCHING VERSION " + arg.version + " ---");
-  require("./launch").launch(arg.version, arg.auth, mainWindow, handleExit, path.join(app.getPath('userData'), "minecraft"));
+  require("./launch").launch(
+    arg.version,
+    arg.auth,
+    mainWindow,
+    handleExit,
+    path.join(app.getPath("userData"), "minecraft")
+  );
+});
+
+ipcMain.on("get_args", (event, arg) => {
+  console.log("Args requested. Sent", process.argv);
+  event.returnValue = process.argv;
 });
