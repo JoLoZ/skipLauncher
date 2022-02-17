@@ -1,6 +1,7 @@
 version: 2
 jobs:
   build_windows:
+    resource_class: medium
     docker:
       - image: electronuserland/builder:wine
     steps:
