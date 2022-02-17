@@ -131,3 +131,10 @@ ipcMain.on("get_args", (event, arg) => {
   console.log("Args requested. Sent", process.argv);
   event.returnValue = process.argv;
 });
+
+ipcMain.on("logout", (event, arg) => {
+  mainWindow.webContents.session.clearStorageData({
+    origin: "https://login.live.com"
+  });
+  mainWindow.reload();
+})

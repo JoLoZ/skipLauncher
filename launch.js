@@ -105,6 +105,8 @@ exports.login = async (win, options) => {
         return;
       }
 
+      console.log("[AUTH]", result);
+      config.set("profile", result.profile);
       win.webContents.send("login_result", msmc.getMCLC().getAuth(result));
     })
     .catch(options.errorHandler);
@@ -114,7 +116,7 @@ exports.syncFiles = function (source, dest, progressCB, exitWindow) {
   const fs = require("fs");
   const path = require("path");
 
-  if(!config.get("syncFiles", true)){
+  if (!config.get("syncFiles", true)) {
     return;
   }
 

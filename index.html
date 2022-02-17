@@ -6,11 +6,13 @@
       <div style="height: 5rem"></div>
       <h1>skipLauncher</h1>
       <div id="launch-info">
-        <span
-          >Ready to play Minecraft
-          <a id="launch-version" href="javascript:select_version();">1.8.9</a
-          >?</span
-        >
+        <span>
+          Hey
+          <a id="launch-playername" href="javascript:page('account')">you</a>,
+          ready to play Minecraft
+          <a id="launch-version" href="javascript:select_version();">1.8.9</a>
+          ?
+        </span>
       </div>
       <button id="launch-btn" style="min-width: 10rem" onclick="btnaction()">
         Login with Microsoft
@@ -29,7 +31,7 @@
     </center>
   </div>
 </div>
-<div class="wrapper" id="page-version" style="display: none">
+<div class="wrapper" id="page-version">
   <div class="flex-center">
     <center>
       <h3>Select Version</h3>
@@ -43,6 +45,18 @@
   </div>
 </div>
 
+<div class="wrapper" id="page-account">
+  <div class="flex-center">
+    <center>
+      <h1>Manage your account</h1>
+      <button onclick="login()">Switch or add accounts</button>
+      <button onclick="logout()">Log out of all accounts</button>
+      <br /><br />
+      <button onclick="page('init')">Back</button>
+    </center>
+  </div>
+</div>
+
 <script src="topbar.js"></script>
 
 <script>
@@ -50,6 +64,8 @@
 
   var auth = null;
   var selected_version = "1.8.9";
+
+  page("init");
 
   function btnaction() {
     if (auth == null) {
@@ -59,13 +75,14 @@
     }
   }
 
-  function login() {
+  function login(type) {
     ipcRenderer.send("login_new", {
-      visible: "select_account",
+      visible: type ?? "select_account",
     });
   }
 
   ipcRenderer.on("login_update", (event, arg) => {
+    page("init");
     $("#progress")
       .width(arg.percent + "%")
       .parent()
@@ -73,6 +90,7 @@
       .slideDown();
     $("#status").text(arg.data);
     $("#launch-btn").addClass("loading").prop("disabled", true).text("Loading");
+    $("#launch-info").slideUp();
   });
 
   ipcRenderer.on("login_result", (event, arg) => {
@@ -80,6 +98,7 @@
 
     selected_version = config.get("version_number", "1.8.9");
     $("#launch-version").text(selected_version);
+    $("#launch-playername").text(config.get("profile").name);
 
     $("#launch-btn")
       .removeClass("loading")
@@ -88,7 +107,7 @@
     $("#status").text("");
     $("#progress").width("0%").parent().clearQueue().slideUp();
 
-    $("#launch-info").slideDown();
+    $("#launch-info").clearQueue().slideDown();
 
     autoLaunchHandler();
   });
@@ -156,11 +175,16 @@
     page("version");
   }
 
+  var currentPage = "init";
   function page(id) {
+    if (currentPage == id) {
+      return;
+    }
     $(".wrapper").clearQueue().fadeOut();
     $("#page-" + id)
       .delay(450)
       .fadeIn();
+    currentPage = id;
   }
 
   function acceptVersion() {
@@ -168,5 +192,12 @@
     $("#launch-version").text(selected_version);
     config.set("version_number", selected_version ?? "1.8.9");
     page("init");
+  }
+
+  function logout() {
+    page("none");
+    setTimeout(() => {
+      ipcRenderer.send("logout");
+    }, 450);
   }
 </script>
