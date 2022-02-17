@@ -5,6 +5,7 @@ build:
   image: electronuserland/builder:wine
   stage: build
   script:
+    - npm i --save-dev electron-builder
     - npm run dist
   artifacts:
     expire_in: 30 days
