@@ -45,7 +45,7 @@ ipcRenderer.on("login_result", (event, arg) => {
 
   $("#launch-info").clearQueue().slideDown();
   
-  $("#credits-link").fadeIn();
+  $("#credits-link").clearQueue().fadeIn();
 
   autoLaunchHandler();
 });
@@ -62,6 +62,7 @@ function launch(version) {
     },
   });
   $("#launch-btn").addClass("loading").prop("disabled", true).text("Launching");
+  $("#credits-link").clearQueue().fadeOut();
 }
 
 ipcRenderer.on("launch_msg", (event, arg) => {
