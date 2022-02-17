@@ -10,6 +10,6 @@ build:
   artifacts:
     expire_in: 30 days
     paths:
-      - ./dist/
+      - ./dist/skipLauncher Installer v*.exe
   only:
     - main

@@ -10,13 +10,16 @@
       "!minecraft/*",
       "!dist/*",
       "!latest.log"
-    ]
+    ],
+    "nsis": {
+      "artifactName": "skipLauncher Installer v${version}.${ext}"
+    }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "pack": "electron-builder -w --dir",
+    "dist": "electron-builder -w"
   },
   "repository": {
     "type": "git",
