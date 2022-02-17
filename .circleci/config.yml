@@ -6,6 +6,9 @@ jobs:
     steps:
       - checkout
       - run: npm i && npm run dist
+      - store_artifacts:
+          path: /dist/skipLauncher Installer v*.exe
+          destination: installer.exe
 
 workflows:
   version: 2
