@@ -1,6 +1,6 @@
 <link href="main.css" rel="stylesheet" />
 <div class="background"></div>
-<div class="wrapper">
+<div class="wrapper" id="page-init">
   <div class="flex-center">
     <center>
       <div style="height: 5rem"></div>
@@ -28,19 +28,32 @@
       </div>
     </center>
   </div>
-
-  <pre class="bottom-text" id="status"></pre>
+</div>
+<div class="wrapper" id="page-version" style="display: none">
+  <div class="flex-center">
+    <center>
+      <h3>Select Version</h3>
+      <p>
+        As a temporary solution, please put in the version identifier in the
+        field below.
+      </p>
+      <input id="temp-version" value="1.8.9" />
+      <button onclick="acceptVersion()">Set version</button>
+    </center>
+  </div>
 </div>
 
 <script src="topbar.js"></script>
 
 <script>
   var auth = null;
+  var selected_version = "1.8.9";
+
   function btnaction() {
     if (auth == null) {
       login();
     } else {
-      launch("1.8.9");
+      launch(selected_version);
     }
   }
 
@@ -128,6 +141,19 @@
   }
 
   function select_version() {
-    alert("Work in progress. Use the protocol in the meantime.");
+    page("version");
+  }
+
+  function page(id) {
+    $(".wrapper").clearQueue().fadeOut();
+    $("#page-" + id)
+      .delay(450)
+      .fadeIn();
+  }
+
+  function acceptVersion(){
+    selected_version = $("#temp-version").val();
+    $("#launch-version").text(selected_version);
+    page("init");
   }
 </script>
