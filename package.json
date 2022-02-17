@@ -12,7 +12,7 @@
       "!latest.log"
     ],
     "nsis": {
-      "artifactName": "skipLauncher_Installer.${ext}"
+      "artifactName": "skipLauncher_installer.${ext}"
     }
   },
   "scripts": {
