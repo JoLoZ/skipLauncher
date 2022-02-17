@@ -8,7 +8,7 @@ build:
     - npm i --save-dev electron-builder
     - npm run dist
   artifacts:
-    expire_in: 30 days
+    expire_in: 6 hours
     paths:
       - ./dist/skipLauncher Installer v*.exe
   only:
