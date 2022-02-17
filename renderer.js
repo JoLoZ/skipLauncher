@@ -29,6 +29,7 @@ ipcRenderer.on("login_update", (event, arg) => {
   $("#status").text(arg.data);
   $("#launch-btn").addClass("loading").prop("disabled", true).text("Loading");
   $("#launch-info").slideUp();
+  $("#credits-link").fadeOut();
 });
 
 ipcRenderer.on("login_result", (event, arg) => {
@@ -36,13 +37,15 @@ ipcRenderer.on("login_result", (event, arg) => {
 
   selected_version = config.get("version_number", "1.8.9");
   $("#launch-version").text(selected_version);
-  $("#launch-playername").text(config.get("profile").name);
+  $(".data-playername").text(config.get("profile").name);
 
   $("#launch-btn").removeClass("loading").prop("disabled", false).text("Play!");
   $("#status").text("");
   $("#progress").width("0%").parent().clearQueue().slideUp();
 
   $("#launch-info").clearQueue().slideDown();
+  
+  $("#credits-link").fadeIn();
 
   autoLaunchHandler();
 });
@@ -131,4 +134,9 @@ function logout() {
   setTimeout(() => {
     ipcRenderer.send("logout");
   }, 450);
+}
+
+function external(url) {
+  var { shell } = require("electron");
+  shell.openExternal(url);
 }

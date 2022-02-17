@@ -8,8 +8,12 @@
       <div id="launch-info">
         <span>
           Hey
-          <a id="launch-playername" href="javascript:page('account')">you</a>,
-          ready to play Minecraft
+          <a
+            id="launch-playername"
+            class="data-playername"
+            href="javascript:page('account')"
+            >you</a
+          >, ready to play Minecraft
           <a id="launch-version" href="javascript:select_version();">1.8.9</a>
           ?
         </span>
@@ -55,6 +59,51 @@
     </center>
   </div>
 </div>
+<div class="wrapper" id="page-credits">
+  <center style="padding-top: 2rem">
+    <div
+      style="
+        width: fit-content;
+        height: calc(100vh - 2rem);
+        overflow-y: scroll;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      "
+    >
+      <br /><br /><br />
+      <h1>Credits</h1>
 
+      <p>Backend coding and GUI design</p>
+      <p>JoLoZ</p>
+
+      <h2>Libraries and Frameworks</h2>
+      <p>Electron</p>
+      <p>jQuery</p>
+      <p>Minecraft Launcher Core</p>
+      <p>MSMC</p>
+      <p>json-store</p>
+      <p>Electron builder</p>
+      <p>Logger</p>
+
+      <h2>Special thanks</h2>
+      <p class="data-playername">You</p>
+
+      <br />
+
+      <p>Dedicated to my dear sister</p>
+
+      <br />
+      <button onclick="page('init')">Back</button>
+      <br /><br />
+    </div>
+  </center>
+</div>
+
+<div id="footer">
+  <a href="javascript:external('https://gitlab.com/joloz/skip-launcher/-/issues')">Report an issue</a>
+  <a href="javascript:external('https://ko-fi.com/joloz')">Buy me a coffee</a>
+  <a href="javascript:external('https://gitlab.com/joloz/skip-launcher/')">Source code</a>
+  <a href="javascript:page('credits')" id="credits-link">Credits</a>
+</div>
 <script src="topbar.js"></script>
 <script src="renderer.js"></script>
