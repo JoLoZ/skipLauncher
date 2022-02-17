@@ -7,8 +7,8 @@ jobs:
       - checkout
       - run: npm i --save-dev electron-builder && npm run dist
       - store_artifacts:
-          path: /dist/skipLauncher Installer v*.exe
-          destination: installer.exe
+          path: /dist/installer.exe
+          destination: skipLauncher_installer.exe
 
 workflows:
   version: 2
