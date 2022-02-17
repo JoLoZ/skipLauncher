@@ -5,7 +5,7 @@ jobs:
       - image: electronuserland/builder:wine
     steps:
       - checkout
-      - run: npm i && npm run dist
+      - run: npm i --save-dev electron-builder && npm run dist
       - store_artifacts:
           path: /dist/skipLauncher Installer v*.exe
           destination: installer.exe
