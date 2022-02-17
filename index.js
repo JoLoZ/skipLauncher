@@ -11,6 +11,11 @@ crashReporter.start({
   uploadToServer: false,
 });
 
+
+process.env.CONFIG_PATH = app.getPath("userData");
+
+const config = require("./config");
+
 const path = require("path");
 
 console.info(`Boot up
@@ -54,6 +59,7 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+
   app.setAsDefaultProtocolClient("skipLauncher");
 
   createWindow();
@@ -97,7 +103,7 @@ function handleExit(code) {
     console.log("Starting file back sync...");
 
     require("./launch").syncFiles(
-      path.join(app.getPath("userData"), "minecraft"),
+      path.join(process.env.CONFIG_PATH, "minecraft"),
       process.env.APPDATA + "/.minecraft",
       "exit",
       exitWindow
@@ -117,7 +123,7 @@ ipcMain.on("launch", (event, arg) => {
     arg.auth,
     mainWindow,
     handleExit,
-    path.join(app.getPath("userData"), "minecraft")
+    path.join(process.env.CONFIG_PATH, "minecraft")
   );
 });
 

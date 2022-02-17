@@ -46,6 +46,8 @@
 <script src="topbar.js"></script>
 
 <script>
+  var config = require("./config");
+
   var auth = null;
   var selected_version = "1.8.9";
 
@@ -75,6 +77,10 @@
 
   ipcRenderer.on("login_result", (event, arg) => {
     auth = arg;
+
+    selected_version = config.get("version_number", "1.8.9");
+    $("#launch-version").text(selected_version);
+
     $("#launch-btn")
       .removeClass("loading")
       .prop("disabled", false)
@@ -88,10 +94,15 @@
   });
 
   function launch(version) {
+    config.set("version_number", version ?? "1.8.9");
+
     $("#launch-version").text(version);
     ipcRenderer.send("launch", {
       auth: auth,
-      version: version,
+      version: {
+        number: version,
+        type: config.get("version_type", "release"),
+      },
     });
     $("#launch-btn")
       .addClass("loading")
@@ -141,6 +152,7 @@
   }
 
   function select_version() {
+    $("#temp-version").val(selected_version);
     page("version");
   }
 
@@ -151,9 +163,10 @@
       .fadeIn();
   }
 
-  function acceptVersion(){
+  function acceptVersion() {
     selected_version = $("#temp-version").val();
     $("#launch-version").text(selected_version);
+    config.set("version_number", selected_version ?? "1.8.9");
     page("init");
   }
 </script>

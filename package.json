@@ -30,6 +30,7 @@
   "homepage": "https://gitlab.com/joloz/skip-launcher#readme",
   "dependencies": {
     "jquery": "^3.6.0",
+    "json-store": "^1.0.0",
     "logger": "^0.0.1",
     "minecraft-launcher-core": "^3.16.11",
     "msmc": "^3.0.6"

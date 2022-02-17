@@ -1,4 +1,5 @@
 const { dialog, app, ipcMain } = require("electron");
+const config = require("./config");
 
 var win = null;
 
@@ -11,7 +12,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
 
   console.info("Attempting to launch in", loc);
 
-  if(!fs.existsSync(loc)){
+  if (!fs.existsSync(loc)) {
     fs.mkdirSync(loc);
   }
 
@@ -26,18 +27,14 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
   let opts = {
     clientPackage: null,
     authorization: auth,
-    overwrites: {
-      directory: "..",
-      gameDirectory: "..",
-    },
     root: loc,
     version: {
-      number: mc_version,
-      type: "release",
+      number: mc_version.number,
+      type: mc_version.type,
     },
     memory: {
-      max: "6G",
-      min: "4G",
+      max: config.get("memory_max", "6G"),
+      min: config.get("memory_min", "4G"),
     },
     detached: true,
   };
@@ -47,7 +44,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
   launcher.on("progress", (progress) => {
     console.log("Progress", progress);
     mainWindow.webContents.send("launch_progress", progress);
-  })
+  });
 
   launcher.launch(opts).then((instance) => {
     setTimeout(() => {
@@ -67,7 +64,7 @@ exports.launch = function (mc_version, auth, mainWindow, exitCallback, loc) {
 
     instance.on("close", (code) => {
       exitCallback(code);
-    })
+    });
   });
 
   launcher.on("data", sendLogToWindow);
@@ -85,10 +82,10 @@ exports.login = async (win, options) => {
   console.log("Login requested", options);
   const msmc = require("msmc");
 
-  if(options.errorHandler == undefined){
-    options.errorHandler = function(reason){
+  if (options.errorHandler == undefined) {
+    options.errorHandler = function (reason) {
       console.error("[AUTH] ERR", reason);
-    }
+    };
   }
 
   msmc
@@ -105,30 +102,33 @@ exports.login = async (win, options) => {
       //Let's check if we logged in?
       if (msmc.errorCheck(result)) {
         options.errorHandler(result.reason);
-        return
+        return;
       }
 
       win.webContents.send("login_result", msmc.getMCLC().getAuth(result));
-    }).catch(options.errorHandler);
+    })
+    .catch(options.errorHandler);
 };
 
 exports.syncFiles = function (source, dest, progressCB, exitWindow) {
   const fs = require("fs");
   const path = require("path");
 
-  if(progressCB == "exit"){
-    progressCB = (msg) => {
-      console.info("[EXIT] File sync progress: \n", msg)
-      exitWindow.webContents.send("exit_msg", msg);
-    }
-  }
-
-
-  if(!fs.existsSync(source) && !fs.existsSync(dest)){
-    progressCB("No local Minecraft installation found.\nSkipping...")
+  if(!config.get("syncFiles", true)){
     return;
   }
 
+  if (progressCB == "exit") {
+    progressCB = (msg) => {
+      console.info("[EXIT] File sync progress: \n", msg);
+      exitWindow.webContents.send("exit_msg", msg);
+    };
+  }
+
+  if (!fs.existsSync(source) && !fs.existsSync(dest)) {
+    progressCB("No local Minecraft installation found.\nSkipping...");
+    return;
+  }
 
   function copyFileSync(source, target) {
     var targetFile = target;
