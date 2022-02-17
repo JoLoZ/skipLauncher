@@ -8,7 +8,11 @@ Build status: [![CircleCI](https://circleci.com/gh/JoLoZ/skipLauncher/tree/main.
 
 GitHub is used as a mirror in order to make Circle CI work. If you want to contribute, fork, etc this project, please do so on GitLab.
 
-[![View on GitLab](https://img.shields.io/static/v1?label=View on&message=GitLab&color=FCA121&logo=gitlab&style=for-the-badge)](https://gitlab.com/joloz/skip-launcher)
+[![GitLab](https://img.shields.io/static/v1?label=View+on&message=GitLab&color=FCA121&logo=gitlab&style=for-the-badge)](https://gitlab.com/joloz/skip-launcher)
+
+
+
+
 
 ## Installation
 
