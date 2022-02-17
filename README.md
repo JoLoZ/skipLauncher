@@ -2,7 +2,7 @@
 
 The skipable Minecraft launcher!
 
-Build status: [![CircleCI](https://circleci.com/gh/JoLoZ/skipLauncher/tree/main.svg?style=svg)](https://circleci.com/gh/JoLoZ/skipLauncher)
+[![CircleCI](https://img.shields.io/circleci/build/gh/JoLoZ/skipLauncher?logo=circleci&style=for-the-badge)](https://app.circleci.com/pipelines/github/JoLoZ)
 
 ## Note for people viewing this on GitHub
 
