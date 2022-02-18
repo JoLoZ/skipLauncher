@@ -106,8 +106,10 @@ exports.login = async (win, options) => {
       }
 
       console.log("[AUTH]", result);
-      config.set("profile", result.profile);
-      win.webContents.send("login_result", msmc.getMCLC().getAuth(result));
+      win.webContents.send("login_result", {
+        auth: msmc.getMCLC().getAuth(result),
+        profile: result.profile,
+      });
     })
     .catch(options.errorHandler);
 };

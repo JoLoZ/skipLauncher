@@ -32,12 +32,17 @@ ipcRenderer.on("login_update", (event, arg) => {
   $("#credits-link").fadeOut();
 });
 
+var profile = {};
 ipcRenderer.on("login_result", (event, arg) => {
-  auth = arg;
+  
+  console.log("[AUTH] Result", arg);
+  
+  auth = arg.auth;
+  profile = arg.profile;
 
   selected_version = config.get("version_number", "1.8.9");
   $("#launch-version").text(selected_version);
-  $(".data-playername").text(config.get("profile").name);
+  $(".data-playername").text(profile.name);
 
   $("#launch-btn").removeClass("loading").prop("disabled", false).text("Play!");
   $("#status").text("");
