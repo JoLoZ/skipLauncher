@@ -1,9 +1,11 @@
+const { stat } = require("original-fs");
 var config = require("./config");
 
 var auth = null;
 var selected_version = "1.8.9";
 
 page("init");
+fetchSettings();
 
 function btnaction() {
   if (auth == null) {
@@ -34,9 +36,8 @@ ipcRenderer.on("login_update", (event, arg) => {
 
 var profile = {};
 ipcRenderer.on("login_result", (event, arg) => {
-  
   console.log("[AUTH] Result", arg);
-  
+
   auth = arg.auth;
   profile = arg.profile;
 
@@ -49,7 +50,7 @@ ipcRenderer.on("login_result", (event, arg) => {
   $("#progress").width("0%").parent().clearQueue().slideUp();
 
   $("#launch-info").clearQueue().slideDown();
-  
+
   $("#credits-link").clearQueue().fadeIn();
 
   autoLaunchHandler();
@@ -145,4 +146,23 @@ function logout() {
 function external(url) {
   var { shell } = require("electron");
   shell.openExternal(url);
+}
+
+$(".setting").on("change", (elem) => {
+  var e = elem.target;
+  if($(e).val() == ""){
+    return;
+  }
+  config.set($(e).data("name"), $(e).val() + $(e).data("suffix"));
+});
+
+function fetchSettings() {
+  $(".setting").each((i, e) => {
+    var state = config.get($(e).data("name"), $(e).prop("value") + $(e).data("suffix"));
+    if($(e).data("suffix") != undefined){
+      state = state.substring(0, state.length - $(e).data("suffix").length);
+    }
+
+    $(e).val(state);
+  });
 }

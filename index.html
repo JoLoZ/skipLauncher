@@ -14,9 +14,10 @@
             href="javascript:page('account')"
             >you</a
           >, ready to play Minecraft
-          <a id="launch-version" href="javascript:select_version();">1.8.9</a>
-          ?
+          <a id="launch-version" href="javascript:select_version();">1.8.9</a>?
         </span>
+        <br />
+        <a href="javascript:page('settings')">Advanced settings</a>
       </div>
       <button id="launch-btn" style="min-width: 10rem" onclick="btnaction()">
         Login with Microsoft
@@ -55,6 +56,49 @@
       <button onclick="login()">Switch or add accounts</button>
       <button onclick="logout()">Log out of all accounts</button>
       <br /><br />
+      <button onclick="page('init')">Back</button>
+    </center>
+  </div>
+</div>
+<div class="wrapper" id="page-settings">
+  <div class="flex-center">
+    <center>
+      <h2>Settings</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td>Minimum Ram</td>
+            <td>
+              <input
+                class="setting"
+                data-name="memory_min"
+                data-suffix="G"
+                type="number"
+                id="ram_min"
+                min="2"
+                value="4"
+              />
+              GB
+            </td>
+          </tr>
+          <tr>
+            <td>Maximum Ram</td>
+            <td>
+              <input
+                class="setting"
+                data-name="memory_max"
+                data-suffix="G"
+                type="number"
+                id="ram_max"
+                min="2"
+                value="6"
+              />
+              GB
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
       <button onclick="page('init')">Back</button>
     </center>
   </div>
@@ -100,9 +144,14 @@
 </div>
 
 <div id="footer">
-  <a href="javascript:external('https://gitlab.com/joloz/skip-launcher/-/issues')">Report an issue</a>
-  <a href="javascript:external('https://ko-fi.com/joloz')">Buy me a coffee</a>
-  <a href="javascript:external('https://gitlab.com/joloz/skip-launcher/')">Source code</a>
+  <a
+    href="javascript:external('https://gitlab.com/joloz/skip-launcher/-/issues')"
+    >Report an issue</a
+  >
+  <a href="javascript:external('https://ko-fi.com/joloz')">Buy me a soda</a>
+  <a href="javascript:external('https://gitlab.com/joloz/skip-launcher/')"
+    >Source code</a
+  >
   <a href="javascript:page('credits')" id="credits-link">Credits</a>
 </div>
 <script src="topbar.js"></script>
